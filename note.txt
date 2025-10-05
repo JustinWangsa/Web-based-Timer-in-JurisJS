@@ -1,0 +1,16 @@
+.timerAdderField .inputBox:empty::before{
+    content:attr(data-placeholder);
+    color: darkgrey;
+}
+.timerAdderField .inputBox:focus{
+    outline:none;
+}
+
+contenteditable:'true',
+
+onkeydown:(e)=>{
+    if(e.key === 'Enter'){
+        e.preventDefault();
+        e.target.blur();
+    }
+}

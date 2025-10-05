@@ -1,0 +1,35 @@
+#timerAdder{
+    background-color: antiquewhite;
+    width: 500px;
+}
+
+.timerAdderField{
+    height: 100px;
+    background-color: aqua;
+    
+    display: grid;
+    grid: repeat(3,25%) / max-content auto 35%;
+    
+    column-gap: 20px;
+    align-content: space-around;
+
+    
+}
+
+
+.timerAdderField .inputBox{
+    border: 0.5px solid black;
+}
+.timerAdderField .inputBox:empty::before{
+    content:attr(data-placeholder);
+    color: darkgrey;
+}
+.timerAdderField .inputBox:focus{
+    outline:none;
+}
+
+.timerAdderField .inputLabel{
+    align-content: center;
+}
+.timerAdderField .inputWarning{}
+
