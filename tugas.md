@@ -31,11 +31,11 @@ Interface Requirements
     
 Top section: Form to add a new timer (name, duration, message, [Add] button).
 
-    * [ ] Each timer has:
+    * [X] ~~*Each timer has:*~~ [2025-10-05]
         A name               : cannot be empty.
         A duration           : {Z+} Seconds ("90"), mm:ss format ("02:30")
         A completion message : optional; if blank, use "Time’s up!".
-    * [ ] After pressing “Add”, the timer is added to the list and saved in localStorage.
+    * [X] ~~*After pressing “Add”, the timer is added to the list and saved in localStorage.*~~ [2025-10-05]
 
 
 Bottom section: List of existing timers.
