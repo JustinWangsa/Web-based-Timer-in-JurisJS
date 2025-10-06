@@ -379,8 +379,9 @@ const _timer_List_node = (props, ctx)=>{
                     return `${minutes}:${seconds}`;
                 }}},
                 {div:{text:()=>{
-                    if(getState(thisNode.duration) > 1){
-                        return `--[${getState(thisNode.message)}]--`;
+                    if(getState(thisNode.remainder) > 1){
+                        // return `--[${getState(thisNode.message)}]--`;
+                        return '';
                     } else {
                         return `${getState(thisNode.message)}`;
 
@@ -417,17 +418,17 @@ const _timer_List_node = (props, ctx)=>{
                 {button:{
                     text:'delete',
                     onclick:()=>{
+                        clearInterval(intervalId);//most likely unecessary, but I can't be sure whether timeout can't come before "phase" close the timeout
                         setState(thisNode.states,TimerData.State.paused);
 
-                        clearInterval(intervalId);//most likely unecessary, but I can't be sure whether timeout can't come before "phase" close the timeout
-                        localStorage.removeItem(ns);
+                        
                         
 
                         let [all,parentNs,thisProperty] = ns.match(/(^.*)\.(\w*$)/);
                         let {[thisProperty]:_,...newParentNs} = getState(parentNs);
                         setState(parentNs, newParentNs);
                         
-                            
+                        localStorage.removeItem(ns);    
                     
 
                       
