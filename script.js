@@ -49,7 +49,7 @@ const _timer_Adder_Field = (props, ctx)=>{
     //component
     let lablePart = {div:{
         class:'inputLabel',
-        children:{div:{text:field}}
+        text:field
     }}
     ;
 
@@ -87,7 +87,7 @@ const _timer_Adder_Field = (props, ctx)=>{
 
     let warningPart = {div:{
         class:'inputWarning',
-        children:{div:{text:()=>getState(w_field)}}
+        text:()=>getState(w_field)
     }}
     ;
 
@@ -99,7 +99,7 @@ const _timer_Adder_Field = (props, ctx)=>{
  * @param {*} ctx 
  * @return {*}
  */
-const _timer_Adder=(props, ctx)=>{//TODO CSS timerAdder
+const _timer_Adder=(props, ctx)=>{
     //unpack param
     let {getState,setState} = ctx;
     let {ns} = props;
@@ -204,41 +204,72 @@ const _timer_Adder=(props, ctx)=>{//TODO CSS timerAdder
 
 
                 //add button
-                {div:{
-                    children:[
-                        {button:{
-                            text:'add',
-                            onclick:()=>{
+                // {div:{
+                //     children:[
+                //         {button:{
+                //             text:'add',
+                //             onclick:()=>{
                                 
                              
-                                if( getState(ns+'._nameField.w').length 
-                                    ||getState(ns+'._durationField.w').length 
-                                    ||getState(ns+'._messageField.w').length 
-                                ){
-                                    console.log(
-                                        '\nname:', getState(ns+'._nameField.w'),
-                                        '\nduration:', getState(ns+'._durationField.w'),
-                                        '\nmessage:', getState(ns+'._messageField.w')
-                                    );
-                                } else {
-                                    let newTimerData = new TimerData(
-                                        getState(ns+'._nameField.d'),
-                                        getState(ns+'._durationField.d'),
-                                        getState(ns+'._messageField.d')
-                                    );
-                                    setState(timerList+'._'+newTimerData.id,newTimerData);
-                                    console.log(timerList+'._'+newTimerData.id,newTimerData);
+                //                 if( getState(ns+'._nameField.w').length 
+                //                     ||getState(ns+'._durationField.w').length 
+                //                     ||getState(ns+'._messageField.w').length 
+                //                 ){
+                //                     console.log(
+                //                         '\nname:', getState(ns+'._nameField.w'),
+                //                         '\nduration:', getState(ns+'._durationField.w'),
+                //                         '\nmessage:', getState(ns+'._messageField.w')
+                //                     );
+                //                 } else {
+                //                     let newTimerData = new TimerData(
+                //                         getState(ns+'._nameField.d'),
+                //                         getState(ns+'._durationField.d'),
+                //                         getState(ns+'._messageField.d')
+                //                     );
+                //                     setState(timerList+'._'+newTimerData.id,newTimerData);
+                //                     console.log(timerList+'._'+newTimerData.id,newTimerData);
                                     
-                                }
+                //                 }
 
                                 
 
                                 
-                            }
-                        }},
-                    ],
+                //             }
+                //         }},
+                //     ],
+                // }},
+                
+                {button:{
+                    text:'add',
+                    onclick:()=>{
+                        
+                        
+                        if( getState(ns+'._nameField.w').length 
+                            ||getState(ns+'._durationField.w').length 
+                            ||getState(ns+'._messageField.w').length 
+                        ){
+                            console.log(
+                                '\nname:', getState(ns+'._nameField.w'),
+                                '\nduration:', getState(ns+'._durationField.w'),
+                                '\nmessage:', getState(ns+'._messageField.w')
+                            );
+                        } else {
+                            let newTimerData = new TimerData(
+                                getState(ns+'._nameField.d'),
+                                getState(ns+'._durationField.d'),
+                                getState(ns+'._messageField.d')
+                            );
+                            setState(timerList+'._'+newTimerData.id,newTimerData);
+                            console.log(timerList+'._'+newTimerData.id,newTimerData);
+                            
+                        }
+
+                        
+
+                        
+                    }
                 }},
-
+                    
 
 
             ],
@@ -292,8 +323,10 @@ const _timer_List_node = (props, ctx)=>{
             
             //synchonization 
             sync_LS:()=>{
-                //TODO sync with localStorage
-                localStorage.setItem(ns,JSON.stringify(getState(ns)));
+                let value;
+                if(value = getState(ns)){
+                    localStorage.setItem(ns,JSON.stringify(value));
+                }
             },
             sync_peekState_remainder:()=>{
                 peekState.remainder = getState(thisNode.remainder);
@@ -387,14 +420,15 @@ const _timer_List_node = (props, ctx)=>{
                         setState(thisNode.states,TimerData.State.paused);
 
                         clearInterval(intervalId);//most likely unecessary, but I can't be sure whether timeout can't come before "phase" close the timeout
+                        localStorage.removeItem(ns);
+                        
 
                         let [all,parentNs,thisProperty] = ns.match(/(^.*)\.(\w*$)/);
-                        
                         let {[thisProperty]:_,...newParentNs} = getState(parentNs);
                         setState(parentNs, newParentNs);
-                        localStorage.removeItem(ns);
-                            
                         
+                            
+                    
 
                       
                     }
@@ -405,7 +439,7 @@ const _timer_List_node = (props, ctx)=>{
     }
 };
 
-//TODO implement timerList 
+
 /**
  * 
  * @param {{ns:string}} props 
@@ -418,6 +452,7 @@ const _timer_List = (props, ctx)=>{
 
     return {
         div:{
+            class:'timerList',
             children:()=>{
                 if(getState(ns)){
                     let subNodeList = Object.keys(getState(ns));
@@ -434,37 +469,37 @@ const _timer_List = (props, ctx)=>{
 
     
 };
-const testNode = (props, ctx)=>{
-    let {getState,setState,peekState} = ctx;
-    // setState('mydata',10);
+// const testNode = (props, ctx)=>{
+//     let {getState,setState,peekState} = ctx;
     
-    setState('aaa',11)
-    let aaa;
+    
+//     setState('aaa',11)
+//     let aaa;
 
-    return {
-        div:{
-            internalSync:()=>{
-                aaa = getState('aaa');
-                // console.log('internal:',aaa);
-            },
-            children:[
-                {button:{ text:'delete', onclick:()=>{
-                    localStorage.clear();
-                }}},
-                {button:{ text:'add', onclick:()=>{
-                    let td = new TimerData('bd',1000*Math.floor(30*Math.random()),'done');
-                    localStorage.setItem('_timer._list._'+td.id,JSON.stringify(td));
-                    setState('_timer._list._'+td.id,td);
-                }}},
-                {button:{ text:'dump', onclick:()=>{
-                    console.log(getState('_timer'));
-                }}},
+//     return {
+//         div:{
+//             internalSync:()=>{
+//                 aaa = getState('aaa');
+                
+//             },
+//             children:[
+//                 {button:{ text:'delete', onclick:()=>{
+//                     localStorage.clear();
+//                 }}},
+//                 {button:{ text:'add', onclick:()=>{
+//                     let td = new TimerData('bd',1000*Math.floor(30*Math.random()),'done');
+//                     localStorage.setItem('_timer._list._'+td.id,JSON.stringify(td));
+//                     setState('_timer._list._'+td.id,td);
+//                 }}},
+//                 {button:{ text:'dump', onclick:()=>{
+//                     console.log(getState('_timer'));
+//                 }}},
 
-            ]
-        }
+//             ]
+//         }
         
-    }
-};
+//     }
+// };
 
 
 
@@ -496,15 +531,6 @@ function dumpLS(){
     return result;
 }
 
-
-
-// function addTimerData(ns){
-    let td = new TimerData('bd',20000,'done');
-    let td2 = new TimerData('bdaaa',10000,'timesup');
-
-    // console.log("._timer._list._102390124".match(/(^[\w\.]*)\.\w*$/));
-//     localStorage.setItem(ns+'._'+td.id);
-// }
 // app
 const app = new Juris({
     states:dumpLS(),
@@ -512,13 +538,13 @@ const app = new Juris({
         _timer_Adder,
         _timer_List,
         _timer_List_node,
-        /*  */testNode,
+        // /*  */testNode,
     },
     layout:[
-        /*  */{testNode:{}},
+        // /*  */{testNode:{}},
         {_timer_Adder:{ns:'_timer._adder'}},
         {_timer_List:{ns:'_timer._list'}},
-        // /*  */{_timer_List_node:{ns:''+timerData.id}},
+        
         
     ],
 });

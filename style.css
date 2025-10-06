@@ -1,23 +1,39 @@
-#timerAdder{
-    background-color: antiquewhite;
-    width: 500px;
+body{
+    color: #202120;
+
+    /* color: #5c6960; */
+    /* color: #8a9ea1; */
+    /* color: #202120; */
+    /* color: #EFEEE0;  */
 }
+
+#timerAdder{
+
+    width: 500px;
+    padding: 0 0 10px 0;
+
+
+    background-color: #EFEEE0;    
+}
+
 
 .timerAdderField{
     height: 100px;
-    background-color: aqua;
+    
+    background-color: #8a9ea1;
     
     display: grid;
     grid: repeat(3,25%) / max-content auto 35%;
     
-    column-gap: 20px;
-    align-content: space-around;
-
-    
+    column-gap: 5px;
+    padding:1px 10px ;
+    align-content: space-around;    
 }
-
-.timerAdderField .inputBox{
-    border: 0.5px solid black;
+.timerAdderField div{
+    background-color: #EFEEE0;
+    
+    display: flex;
+    align-items: center;
 }
 .timerAdderField .inputBox:empty::before{
     content:attr(data-placeholder);
@@ -26,12 +42,51 @@
 .timerAdderField .inputBox:focus{
     outline:none;
 }
-
-.timerAdderField .inputLabel{
-    align-content: center;
+.timerAdderField .inputWarning{
+    background-color: #8a9ea1;
 }
 
+#timerAdder button{
+    display: block;
+    justify-self: center ;
+}
+
+.timerList{
+    background-color: #EFEEE0;
+    width:500px;
+    padding: 50px 0;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+
 /* timer list Node */
+.timerList_node{
+    background-color: #8a9ea1;
+    width: max-content;
+    height: 200px;
+    margin: 10px;
+    
+
+    display: grid;
+    grid-template-areas:
+    'name name name name'
+    'duration duration duration duration'
+    'duration duration duration duration'
+    'message message message message'
+    'start pause reset delete'       
+    ;
+    grid-template-rows: 1fr 1fr 1fr 1fr max-content;
+    padding: 10px;
+    
+    
+    align-items: center;
+    justify-items: center;
+
+    
+}
 .timerList_node > div{
     width: 100%;
     height: 100%;
@@ -42,10 +97,13 @@
 .timerList_node :nth-child(1){
     grid-area: name;
     background-color: #8a9ea1;
+    font-size: 1.5rem;
+    
 }
 .timerList_node :nth-child(2){
     grid-area: duration;
     background-color: #EFEEE0;
+    font-size: 2rem;
 }
 .timerList_node :nth-child(3){
     grid-area: message;
@@ -55,12 +113,7 @@
 .timerList_node :nth-child(5){grid-area: pause;}
 .timerList_node :nth-child(6){grid-area: reset;}
 .timerList_node :nth-child(7){grid-area: delete;}
-.clrplt{
-    background-color: #5c6960;
-    background-color: #8a9ea1;
-    background-color: #202120;
-    background-color: #EFEEE0;    
-}
+
     
 
 
@@ -73,27 +126,6 @@
     
 }
 
-.timerList_node{
-    width: max-content;
-    height: 200px;
-    background-color: #8a9ea1;
 
-    display: grid;
-    grid-template-areas:
-    'name name name name'
-    'duration duration duration duration'
-    'duration duration duration duration'
-    'message message message message'
-    'start pause reset delete'       
-    ;
-    grid-template-rows: 1fr 1fr 1fr 1fr max-content;
-
-    
-    padding: 10px;
-    align-items: center;
-    justify-items: center;
-    
-
-}
 
 
