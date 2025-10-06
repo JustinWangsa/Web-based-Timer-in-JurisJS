@@ -40,21 +40,21 @@ Top section: Form to add a new timer (name, duration, message, [Add] button).
 
 Bottom section: List of existing timers.
     
-    * [ ] Each timer should display:
+    * [X] ~~*Each timer should display:*~~ [2025-10-06]
             Name
             Remaining time (format mm:ss)
             Control buttons: Start / Pause / Reset / Delete
-            * [ ] Completion message when finished
+            * [X] ~~*Completion message when finished*~~ [2025-10-06]
 
-    * [ ] Multiple independent timers
+    * [X] ~~*Multiple independent timers*~~ [2025-10-06]
         The app must support multiple timers simultaneously.
 
-    * [ ] Persistence
+    * [X] ~~*Persistence*~~ [2025-10-06]
         Timers must be saved in localStorage.
         After refresh, the list and their states must reload.
         If a timer was running, it should continue with the correct remaining time.
 
-    * [ ] Completion behavior
+    * [X] ~~*Completion behavior*~~ [2025-10-06]
         When a timer reaches zero, display its completion message.
         Extra credit: use visual highlight, sound, or browser notifications.
 
