@@ -26,7 +26,7 @@ class TimerData {
 
 //component
 
-
+//TODO change ns into thisNode
 /**
  * private state: timerAdder.d_field, timerAdder.w_field
  * @param {{ns:string, field:string, validator:(input:string)=>{warning:string,value:any}, required:boolean, placeholder:string}} props 
@@ -251,54 +251,47 @@ const _timer_Adder=(props, ctx)=>{//TODO CSS timerAdder
 //TODO implement timerNode 
 /**
  * 
- * @param {{ns:string, data:TimerData}} props 
+ * @param {{ns:string}} props 
  * @param {*} ctx 
  * @returns {*}
  */
 const _timer_List_node = (props, ctx)=>{
     //upacking param
     let {getState,setState} = ctx;
-    let {ns,data} = props;
+    let {ns} = props;
     
 
     //state variable name
-    let id = data.id;
-    let thisNodeName = ns+id;
+    
     let thisNode = {
-        name      : thisNodeName+'.name',
-        message   : thisNodeName+'.message',
-        duration  : thisNodeName+'.duration',
-        id        : thisNodeName+'.id',
-        states    : thisNodeName+'.states',
-        remainder : thisNodeName+'.remainder',
-        end       : thisNodeName+'.end',
+        name      : ns+'.name',
+        message   : ns+'.message',
+        duration  : ns+'.duration',
+        id        : ns+'.id',
+        states    : ns+'.states',
+        remainder : ns+'.remainder',
+        end       : ns+'.end',
     };
 
-    //set-ing dependency state
-    setState(thisNode.name     ,data.name     );
-    setState(thisNode.duration ,data.duration );
-    setState(thisNode.message  ,data.message  );
-    setState(thisNode.id       ,data.id       );
-    setState(thisNode.states   ,data.states   );
-    setState(thisNode.remainder,data.remainder);
-    setState(thisNode.end      ,data.end      );
+    
 
-    //peekState alternative
+    //peekState alternative. for some devine reason, Juris refuse to implement a way to read a data whilst not subscribe to said data
     let peekState = {
         remainder:0,
         end:0,
     };
+    //this is just a weak patch since the synchronization handler below will only take effect synchronously. simply put if a handler modified a state, this data will only be updated once the handler finishes execution.
 
     
 
 
     //logic
-    let intervalId;//TODO add finishInterval and updateInterval
+    let intervalId;//in hindsight, having a setTimeout that will trigger a handler specifically when the timer ends, should result in a more accurate timer
     return {
         div:{
             class:'timerList_node',
             
-            //synchonization
+            //synchonization 
             sync_LS:()=>{
                 //TODO sync with localStorage
             },
@@ -438,6 +431,7 @@ const testNode = (props, ctx)=>{
 
 
 //extracting localstorage
+
 function dumpLS(){
     let result = {};
     for(let i = 0; i< localStorage.length; i++){
@@ -464,10 +458,13 @@ function dumpLS(){
     return result;
 }
 
+let arg = dumpLS();
 
+/*  */let timerData = new TimerData('birthday',10000,"time's up");
 // app
 const app = new Juris({
     states:{
+        [''+timerData.id]:timerData,
     },
     components:{
         _timer_Adder,
@@ -478,7 +475,7 @@ const app = new Juris({
     layout:[
         // {timerAdder:{}},
         // {timerList:{}},
-        /*  */{_timer_List_node:{ns:"",data:new TimerData('birthday',10000,"time's up"),}},
+        /*  */{_timer_List_node:{ns:''+timerData.id}},
         /*  */{testNode:{}}
     ],
 });
