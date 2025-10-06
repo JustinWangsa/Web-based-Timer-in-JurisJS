@@ -384,7 +384,10 @@ const _timer_List_node = (props, ctx)=>{
                 {button:{
                     text:'delete',
                     onclick:()=>{
-                        
+                        setState(thisNode.states,TimerData.State.paused);
+
+                        clearInterval(intervalId);//most likely unecessary, but I can't be sure whether timeout can't come before "phase" close the timeout
+
                         let [all,parentNs,thisProperty] = ns.match(/(^.*)\.(\w*$)/);
                         
                         let {[thisProperty]:_,...newParentNs} = getState(parentNs);
@@ -392,7 +395,7 @@ const _timer_List_node = (props, ctx)=>{
                             
                         
 
-                        //TODO delete button
+                      
                     }
                     
                 }},
