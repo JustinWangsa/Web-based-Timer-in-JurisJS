@@ -39,10 +39,10 @@ const _timer_Adder_Field = (props, ctx)=>{
     let {getState,setState} = ctx;
     
     //private state
-    let thisNode = ns;
-    let d_field = thisNode+'.d_'+field;           
+    
+    let d_field = ns+'.d';           
     setState(d_field,'');
-    let w_field = thisNode+'.w_'+field;           
+    let w_field = ns+'.w';           
     if(required) setState(w_field,'can not be empty');
     else setState(w_field,'');
 
@@ -105,7 +105,6 @@ const _timer_Adder=(props, ctx)=>{//TODO CSS timerAdder
     let {ns} = props;
 
     //state name
-    let thisNode = ns+'._Adder';
     let timerList = '_timer._List';
     // setState('TimerData'); shared with TimerList
 
@@ -119,7 +118,7 @@ const _timer_Adder=(props, ctx)=>{//TODO CSS timerAdder
                     class:'timerAdderField',
                     children:[
                         ..._timer_Adder_Field({
-                            ns:thisNode,
+                            ns:ns+'._nameField',
                             field: 'name',
                             required: 1,
                             validator: (input) => {
@@ -136,7 +135,7 @@ const _timer_Adder=(props, ctx)=>{//TODO CSS timerAdder
                         },ctx),
 
                         ..._timer_Adder_Field({
-                            ns:thisNode,
+                            ns:ns+'._durationField',
                             field: 'duration',
                             placeholder:'enter timer duration',
                             required: 1,
@@ -183,7 +182,7 @@ const _timer_Adder=(props, ctx)=>{//TODO CSS timerAdder
                         },ctx),
 
                         ..._timer_Adder_Field({
-                            ns:thisNode,
+                            ns:ns+'._messageField',
                             field: 'message',
                             required: 0,
                             placeholder:'(optional) enter completion message',
@@ -211,20 +210,20 @@ const _timer_Adder=(props, ctx)=>{//TODO CSS timerAdder
                             onclick:()=>{
                                 
                              
-                                if( getState(thisNode+'.w_name').length 
-                                    ||getState(thisNode+'.w_duration').length 
-                                    ||getState(thisNode+'.w_message').length 
+                                if( getState(ns+'._nameField.w').length 
+                                    ||getState(ns+'._durationField.w').length 
+                                    ||getState(ns+'._messageField.w').length 
                                 ){
                                     console.log(
-                                        '\nname:', getState(thisNode+'.w_name'),
-                                        '\nduration:', getState(thisNode+'.w_duration'),
-                                        '\nmessage:', getState(thisNode+'.w_message')
+                                        '\nname:', getState(ns+'._nameField.w'),
+                                        '\nduration:', getState(ns+'._durationField.w'),
+                                        '\nmessage:', getState(ns+'._messageField.w')
                                     );
                                 } else {
                                     let newTimerData = new TimerData(
-                                        getState(thisNode+'.d_name'),
-                                        getState(thisNode+'.d_duration'),
-                                        getState(thisNode+'.d_message')
+                                        getState(ns+'._nameField.d'),
+                                        getState(ns+'._durationField.d'),
+                                        getState(ns+'._messageField.d')
                                     );
                                     setState(timerList,newTimerData);//TODO where to save the new TimerData?
                                     console.log('added',newTimerData);
@@ -473,9 +472,9 @@ const app = new Juris({
         /*  */testNode,
     },
     layout:[
-        // {timerAdder:{}},
+        {_timer_Adder:{ns:'_adder'}},
         // {timerList:{}},
-        /*  */{_timer_List_node:{ns:''+timerData.id}},
+        // /*  */{_timer_List_node:{ns:''+timerData.id}},
         /*  */{testNode:{}}
     ],
 });
