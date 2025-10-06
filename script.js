@@ -293,7 +293,7 @@ const _timer_List_node = (props, ctx)=>{
             //synchonization 
             sync_LS:()=>{
                 //TODO sync with localStorage
-                // localStorage.setItem(ns,JSON.stringify(getState(ns)));
+                localStorage.setItem(ns,JSON.stringify(getState(ns)));
             },
             sync_peekState_remainder:()=>{
                 peekState.remainder = getState(thisNode.remainder);
@@ -392,6 +392,7 @@ const _timer_List_node = (props, ctx)=>{
                         
                         let {[thisProperty]:_,...newParentNs} = getState(parentNs);
                         setState(parentNs, newParentNs);
+                        localStorage.removeItem(ns);
                             
                         
 
