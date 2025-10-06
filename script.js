@@ -29,19 +29,19 @@ class TimerData {
 
 /**
  * private state: timerAdder.d_field, timerAdder.w_field
- * @param {{ns:string, field:string, validator:(input:string)=>{warning:string,value:any}, required:boolean, placeholder:string}} props 
+ * @param {{ns:string, field:string, validator:(input:string)=>{warning:string,value:any}, initial:string, required:boolean, placeholder:string}} props 
  * @param {*} ctx 
  * @return {*}
  */
 const _timer_Adder_Field = (props, ctx)=>{
     //unpack props 
-    let {ns,field,validator,required,placeholder} = props;
+    let {ns,field,initial,validator,required,placeholder} = props;
     let {getState,setState} = ctx;
     
     //private state
     
     let d_field = ns+'.d';           
-    setState(d_field,'');
+    setState(d_field,initial??'');
     let w_field = ns+'.w';           
     if(required) setState(w_field,'can not be empty');
     else setState(w_field,'');
@@ -105,7 +105,7 @@ const _timer_Adder=(props, ctx)=>{//TODO CSS timerAdder
     let {ns} = props;
 
     //state name
-    let timerList = '_timer._List';
+    let timerList = '_timer._list';
     // setState('TimerData'); shared with TimerList
 
     return {
@@ -186,6 +186,7 @@ const _timer_Adder=(props, ctx)=>{//TODO CSS timerAdder
                             field: 'message',
                             required: 0,
                             placeholder:'(optional) enter completion message',
+                            initial:"Time's up!",
                             validator: (input) => {
                                 return {
                                     warning:'',
@@ -226,6 +227,7 @@ const _timer_Adder=(props, ctx)=>{//TODO CSS timerAdder
                                         getState(ns+'._messageField.d')
                                     );
                                     setState(timerList+'._'+newTimerData.id,newTimerData);
+                                    console.log(timerList+'._'+newTimerData.id,newTimerData);
                                     
                                 }
 
@@ -258,8 +260,6 @@ const _timer_List_node = (props, ctx)=>{
     //upacking param
     let {getState,setState} = ctx;
     let {ns} = props;
-    
-    console.log(ns);
     //state variable name
     
     let thisNode = {
@@ -293,6 +293,7 @@ const _timer_List_node = (props, ctx)=>{
             //synchonization 
             sync_LS:()=>{
                 //TODO sync with localStorage
+                // localStorage.setItem(ns,JSON.stringify(getState(ns)));
             },
             sync_peekState_remainder:()=>{
                 peekState.remainder = getState(thisNode.remainder);
@@ -317,7 +318,7 @@ const _timer_List_node = (props, ctx)=>{
                             setState(thisNode.remainder,remainder);
                             if(remainder <= 0){
                                 setState(thisNode.states,TimerData.State.finished);
-                                clearInterval(id);
+                                clearInterval(intervalId);
                             }
                         },500);
                     break;
@@ -383,6 +384,15 @@ const _timer_List_node = (props, ctx)=>{
                 {button:{
                     text:'delete',
                     onclick:()=>{
+                        
+                        let [all,parentNs,thisProperty] = ns.match(/(^.*)\.(\w*$)/);
+                        
+                        let {[thisProperty]:_,...newParentNs} = getState(parentNs);
+                        setState(parentNs, newParentNs);
+                            
+                        
+
+                        //TODO delete button
                     }
                     
                 }},
@@ -404,9 +414,17 @@ const _timer_List = (props, ctx)=>{
 
     return {
         div:{
-            children:()=>Object.keys(getState(ns)).map(
-                id=>({_timer_List_node:{ns:ns+'.'+id}})
-            )
+            children:()=>{
+                if(getState(ns)){
+                    let subNodeList = Object.keys(getState(ns));
+                    return subNodeList.map(
+                        id=>({_timer_List_node:{ns:ns+'.'+id}})
+                    );
+                } else {
+                    console.log(ns+':empty subNode');
+                }
+                
+            }
         }
     }
 
@@ -426,9 +444,18 @@ const testNode = (props, ctx)=>{
                 // console.log('internal:',aaa);
             },
             children:[
-                {button:{ text:'click', onclick:()=>{
-                    setState('aaa',getState('aaa')+1);      
-                }}}
+                {button:{ text:'delete', onclick:()=>{
+                    localStorage.clear();
+                }}},
+                {button:{ text:'add', onclick:()=>{
+                    let td = new TimerData('bd',1000*Math.floor(30*Math.random()),'done');
+                    localStorage.setItem('_timer._list._'+td.id,JSON.stringify(td));
+                    setState('_timer._list._'+td.id,td);
+                }}},
+                {button:{ text:'dump', onclick:()=>{
+                    console.log(getState('_timer'));
+                }}},
+
             ]
         }
         
@@ -465,22 +492,18 @@ function dumpLS(){
     return result;
 }
 
-let arg = dumpLS();
+
 
 // function addTimerData(ns){
     let td = new TimerData('bd',20000,'done');
     let td2 = new TimerData('bdaaa',10000,'timesup');
 
+    // console.log("._timer._list._102390124".match(/(^[\w\.]*)\.\w*$/));
 //     localStorage.setItem(ns+'._'+td.id);
 // }
 // app
 const app = new Juris({
-    states:{
-        _timer:{_list:{
-            ['_'+td.id]:td,
-            ['_'+td2.id]:td2,
-        }}
-    },
+    states:dumpLS(),
     components:{
         _timer_Adder,
         _timer_List,
@@ -488,10 +511,11 @@ const app = new Juris({
         /*  */testNode,
     },
     layout:[
-        // {_timer_Adder:{ns:'_adder'}},
+        /*  */{testNode:{}},
+        {_timer_Adder:{ns:'_timer._adder'}},
         {_timer_List:{ns:'_timer._list'}},
         // /*  */{_timer_List_node:{ns:''+timerData.id}},
-        /*  */{testNode:{}}
+        
     ],
 });
 app.render('#app');
