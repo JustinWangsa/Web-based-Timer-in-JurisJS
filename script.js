@@ -26,7 +26,7 @@ class TimerData {
 
 //component
 
-//TODO change ns into thisNode
+
 /**
  * private state: timerAdder.d_field, timerAdder.w_field
  * @param {{ns:string, field:string, validator:(input:string)=>{warning:string,value:any}, required:boolean, placeholder:string}} props 
@@ -225,8 +225,8 @@ const _timer_Adder=(props, ctx)=>{//TODO CSS timerAdder
                                         getState(ns+'._durationField.d'),
                                         getState(ns+'._messageField.d')
                                     );
-                                    setState(timerList,newTimerData);//TODO where to save the new TimerData?
-                                    console.log('added',newTimerData);
+                                    setState(timerList+'._'+newTimerData.id,newTimerData);
+                                    
                                 }
 
                                 
@@ -247,7 +247,7 @@ const _timer_Adder=(props, ctx)=>{//TODO CSS timerAdder
 
 
 
-//TODO implement timerNode 
+
 /**
  * 
  * @param {{ns:string}} props 
@@ -259,7 +259,7 @@ const _timer_List_node = (props, ctx)=>{
     let {getState,setState} = ctx;
     let {ns} = props;
     
-
+    console.log(ns);
     //state variable name
     
     let thisNode = {
@@ -392,17 +392,25 @@ const _timer_List_node = (props, ctx)=>{
 };
 
 //TODO implement timerList 
-const _timer_List = (props, {getState,setState})=>{
-
+/**
+ * 
+ * @param {{ns:string}} props 
+ * @param {*} param1 
+ * @returns 
+ */
+const _timer_List = (props, ctx)=>{
+    let {getState,setState} = ctx;
+    let {ns} = props;
 
     return {
         div:{
-            id:'timerList',
-            children:[
-                
-            ]
+            children:()=>Object.keys(getState(ns)).map(
+                id=>({_timer_List_node:{ns:ns+'.'+id}})
+            )
         }
     }
+
+    
 };
 const testNode = (props, ctx)=>{
     let {getState,setState,peekState} = ctx;
@@ -415,7 +423,7 @@ const testNode = (props, ctx)=>{
         div:{
             internalSync:()=>{
                 aaa = getState('aaa');
-                console.log('internal:',aaa);
+                // console.log('internal:',aaa);
             },
             children:[
                 {button:{ text:'click', onclick:()=>{
@@ -459,11 +467,19 @@ function dumpLS(){
 
 let arg = dumpLS();
 
-/*  */let timerData = new TimerData('birthday',10000,"time's up");
+// function addTimerData(ns){
+    let td = new TimerData('bd',20000,'done');
+    let td2 = new TimerData('bdaaa',10000,'timesup');
+
+//     localStorage.setItem(ns+'._'+td.id);
+// }
 // app
 const app = new Juris({
     states:{
-        [''+timerData.id]:timerData,
+        _timer:{_list:{
+            ['_'+td.id]:td,
+            ['_'+td2.id]:td2,
+        }}
     },
     components:{
         _timer_Adder,
@@ -472,8 +488,8 @@ const app = new Juris({
         /*  */testNode,
     },
     layout:[
-        {_timer_Adder:{ns:'_adder'}},
-        // {timerList:{}},
+        // {_timer_Adder:{ns:'_adder'}},
+        {_timer_List:{ns:'_timer._list'}},
         // /*  */{_timer_List_node:{ns:''+timerData.id}},
         /*  */{testNode:{}}
     ],
