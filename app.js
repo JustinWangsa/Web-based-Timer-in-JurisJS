@@ -1,13 +1,3 @@
-// {
-//   id: string,              
-//   name: string,            
-//   durationSec: number,     
-//   remainSec: number,       
-//   endsAt: number | null,   
-//   message: string,         
-//   status: 'idle' | 'running' | 'paused' | 'done'  
-// }
-
 let timers = [];
 
 function saveTimers(timers) {
@@ -47,13 +37,37 @@ function formatTime(sec) {
   return `${m.toString().padStart(2,'0')} : ${s.toString().padStart(2,0)}`;
 }
 
-const App = () => { // form input states
-  let nameInput = "";
-  let durationInput = "";
-  let messageInput = "";
+function startTimer(id){
+  const timer = timers.find(t => t.id === id);
+  
+}
 
-  const addTimer  = () => {
-    if(!nameInput) 
+function pauseTimer(id){
+  console.log("Time Paused!",id);
+}
+
+function resetTimer(id){
+  const timer = timers.find(t => t.id === id);
+  if (timer){
+    timer.remainSec = timer.durationSec;
+    timer.status = "idle";
+    saveTimers();
+    TimerApp.render();
+  }
+}
+
+function deleteTimer(id) {
+  timers = timers.filter(t => t.id !== id);
+  saveTimers();
+  TimerApp.render();
+}
+
+let nameInput = "";// form input states
+let durationInput = "";
+let messageInput = "";
+
+const addTimer  = () => {
+    if(!nameInput)  
       return alert("The name CANNOT be empty!"); // check empty or no
     let durationSec = parseDuration(durationInput); // change all to second
     if(isNaN(durationSec) || durationSec <= 0) 
@@ -61,35 +75,39 @@ const App = () => { // form input states
 
     const timer = createTimer(nameInput , durationSec , messageInput);
     timers.push(timer); // input in timers array
-    saveTimers(timers); // save the timers into localStorage
+    saveTimers(); // save the timers into localStorage
 
     nameInput = durationInput = messageInput = ""; // make blank so can add new timer 
-    App.render(); 
+    renderApp();
   };
 
-  return (
-    <div>
-      <h1>Add Timer</h1>
-      <input type = "text" placeholder= "Name" value = {nameInput} onInput = {e => nameInput = e.target.value} />
-      <input type = "text" placeholder= "Duration (mm:ss or in seconds)" value = {durationInput} onInput = {e => durationInput = e.target.value} />
-      <input type = "text" placeholder= "Message (optional)" value = {messageInput} onInput = {e => messageInput = e.target.value} />
-      <button onClick = {addTimer}>Add Timer</button>
+function renderApp() {
+  const app = document.getElementById("app");
 
-      <h2>My Timers</h2>
-      <ul>
-        {timers.map(timer => (
-          <li key={timer.id}>
-            <strong>{timer.name}</strong> – {formatTime(timer.remainSec)}
-            <button>Start</button>
-            <button>Pause</button>
-            <button>Reset</button>
-            <button>Delete</button>
-          </li>
-        ))}
-      </ul>
-    </div>  
-  );
-};
+  let timerListHTML = timers.map(timer => `
+    <li>
+      <strong>${timer.name}</strong> – ${formatTime(timer.remainSec)}
+      <button click="startTimer('${timer.id}')">Start</button>
+      <button click="pauseTimer('${timer.id}')">Pause</button>
+      <button click="resetTimer('${timer.id}')">Reset</button>
+      <button click="deleteTimer('${timer.id}')">Delete</button>
+    </li>
+  `).join("");
 
-timers = loadTimers();
-App.mount("#app");
+  app.innerHTML = `
+    <h1>Add Timer</h1>
+    <input type="text" placeholder="Name" id="nameInput" value="${nameInput}">
+    <input type="text" placeholder="Duration (mm:ss or seconds)" id="durationInput" value="${durationInput}">
+    <input type="text" placeholder="Message (optional)" id="messageInput" value="${messageInput}">
+    <button id="addBtn">Add Timer</button>
+    <h2>My Timers</h2>
+    <ul>${timerListHTML}</ul>
+  `;
+
+  document.getElementById("nameInput").oninput = e => nameInput = e.target.value;
+  document.getElementById("durationInput").oninput = e => durationInput = e.target.value;
+  document.getElementById("messageInput").oninput = e => messageInput = e.target.value;
+  document.getElementById("addBtn").onclick = addTimer;
+}
+
+renderApp();
