@@ -1,5 +1,14 @@
-let timers = [];
-
+// {
+//   id: string,
+//   name: string,
+//   durationSec: number, // total duration
+//   remainSec: number,   // remaining time
+//   endsAt: number|null, // timestamp when timer should end
+//   message: string,
+//   status: 'idle'|'running'|'paused'|'done'
+// }
+let timers = loadTimers();
+let audio = new Audio('backsound_timer.mp3');
 function saveTimers(timers) {
   localStorage.setItem("timers", JSON.stringify(timers));
 } // for save time (so the time doesn't reset)
@@ -7,6 +16,7 @@ function saveTimers(timers) {
 function loadTimers() {
   return JSON.parse(localStorage.getItem("timers")) || [];
 } // for load timers when re open file
+
 
 function createTimer(name, durationSec, message) { // for making new timers (data)
   return {
@@ -37,30 +47,61 @@ function formatTime(sec) {
   return `${m.toString().padStart(2,'0')} : ${s.toString().padStart(2,0)}`;
 }
 
-function startTimer(id){
+window.startTimer = function(id) {
   const timer = timers.find(t => t.id === id);
-  
-}
+  if (!timer || timer.status === 'running') return;
 
-function pauseTimer(id){
-  console.log("Time Paused!",id);
-}
+  timer.status = 'running';
+  timer.endsAt = Date.now() + timer.remainSec * 1000; // convert remaining seconds to ms
 
-function resetTimer(id){
+  const intervalId = setInterval(() => {
+    const now = Date.now();
+    timer.remainSec = Math.max(Math.round((timer.endsAt - now) / 1000), 0); // convert back to seconds
+    renderApp();
+
+    if (timer.remainSec <= 0) {
+      audio.play();
+      clearInterval(intervalId);
+      timer.intervalId = null;
+      timers = timers.filter(t => t.id !== timer.id); // Remove the timer from the array
+      alert(timer.message);
+      saveTimers(timers);
+      renderApp();
+    }
+  }, 1000);
+
+  timer.intervalId = intervalId;
+};
+
+window.pauseTimer = function(id){
+  const timer = timers.find(t => t.id === id);
+  if (!timer || timer.status !== 'running') return;
+
+  clearInterval(timer.intervalId);
+  timer.intervalId = null;
+  timer.remainSec = Math.max(Math.round((timer.endsAt - Date.now())/1000), 0);
+  timer.status = 'paused';
+  timer.endsAt = null;
+
+  saveTimers(timers);
+  renderApp();
+};
+
+window.resetTimer = function(id){
   const timer = timers.find(t => t.id === id);
   if (timer){
     timer.remainSec = timer.durationSec;
     timer.status = "idle";
-    saveTimers();
-    TimerApp.render();
+    saveTimers(timers);
+    renderApp();
   }
 }
 
-function deleteTimer(id) {
+window.deleteTimer = function(id){
   timers = timers.filter(t => t.id !== id);
-  saveTimers();
-  TimerApp.render();
-}
+  saveTimers(timers);
+  renderApp();
+};
 
 let nameInput = "";// form input states
 let durationInput = "";
@@ -75,7 +116,7 @@ const addTimer  = () => {
 
     const timer = createTimer(nameInput , durationSec , messageInput);
     timers.push(timer); // input in timers array
-    saveTimers(); // save the timers into localStorage
+    saveTimers(timers); // save the timers into localStorage
 
     nameInput = durationInput = messageInput = ""; // make blank so can add new timer 
     renderApp();
@@ -84,24 +125,29 @@ const addTimer  = () => {
 function renderApp() {
   const app = document.getElementById("app");
 
-  let timerListHTML = timers.map(timer => `
-    <li>
-      <strong>${timer.name}</strong> – ${formatTime(timer.remainSec)}
-      <button click="startTimer('${timer.id}')">Start</button>
-      <button click="pauseTimer('${timer.id}')">Pause</button>
-      <button click="resetTimer('${timer.id}')">Reset</button>
-      <button click="deleteTimer('${timer.id}')">Delete</button>
-    </li>
-  `).join("");
+let timerListHTML = timers.map(timer => `
+  <div class="card">
+  <div class="name"<strong>${timer.name}</strong> </div>
+  <div class="countdown">${formatTime(timer.remainSec)}</div>
+    <div class="button">
+      <button onclick="startTimer('${timer.id}')">Start</button>
+      <button onclick="pauseTimer('${timer.id}')">Pause</button>
+      <button onclick="resetTimer('${timer.id}')">Reset</button>
+      <button onclick="deleteTimer('${timer.id}')">Delete</button>
+    </div>
+  </div>
+`).join("");
 
-  app.innerHTML = `
-    <h1>Add Timer</h1>
-    <input type="text" placeholder="Name" id="nameInput" value="${nameInput}">
-    <input type="text" placeholder="Duration (mm:ss or seconds)" id="durationInput" value="${durationInput}">
-    <input type="text" placeholder="Message (optional)" id="messageInput" value="${messageInput}">
-    <button id="addBtn">Add Timer</button>
-    <h2>My Timers</h2>
-    <ul>${timerListHTML}</ul>
+app.innerHTML = `
+    <div class="input">
+      <h1>Multi Timers</h1>
+      <input type="text" placeholder="Name" id="nameInput" value="${nameInput}">
+      <input type="text" placeholder="Duration (mm:ss or seconds)" id="durationInput" value="${durationInput}">
+      <input type="text" placeholder="Message (optional)" id="messageInput" value="${messageInput}">
+      <div class= "add"><button id="addBtn">Add Timer</button></div> 
+      <h2>My Timers List</h2>
+    </div>
+    <div class="container">${timerListHTML}</div>
   `;
 
   document.getElementById("nameInput").oninput = e => nameInput = e.target.value;

@@ -1,0 +1,92 @@
+body {
+    font-family: arial,sans-serif;
+    background-color: #f0f4f8;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container{
+    text-align: center;
+    background-color: #ebeff3;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);  
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    justify-items: center;
+}
+
+
+h1, h2{
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: #007bff;
+    text-align: center;
+}
+
+.button button{
+    padding: 10px 20px;
+    font-size: 1rem;
+    margin: 10px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button button:hover{
+    background-color: #0056b3;
+}
+
+.countdown {
+    font-size: 2.5rem;
+    margin: 20px 0;
+    font-weight: bold;
+    color: #3d9952;
+}
+
+.name {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #000000;
+    font-weight: bold;
+}
+
+.message {
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 10px;
+}
+
+.input input {
+    padding: 10px;
+    margin: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: calc(100% - 44px);
+    box-sizing: border-box;
+}
+
+
+.add button{
+    padding: 10px 20px;
+    font-size: 1rem;
+    margin: 10px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.add button:hover{
+    background-color: #0056b3;
+}
