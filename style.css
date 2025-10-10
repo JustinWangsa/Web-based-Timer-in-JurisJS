@@ -1,3 +1,31 @@
+@media (max-width: 600px) {
+    .container {
+        grid-template-columns: 1fr;
+        padding: 16px 4px;
+        max-width: 100%;
+    }
+    .card {
+        max-width: 100%;
+        margin: 12px 0;
+        padding: 16px 8px;
+    }
+    h1, h2 {
+        font-size: 1.3rem;
+    }
+    .countdown {
+        font-size: 1.5rem;
+    }
+    .button button {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
+    .input input {
+        font-size: 1rem;
+        padding: 6px 8px;
+        width: 100%;
+    }
+}
+
 body {
     font-family: arial,sans-serif;
     background-color: #f0f4f8;
