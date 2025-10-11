@@ -351,6 +351,7 @@ const _timer_List_node = (props, ctx)=>{
                             setState(thisNode.remainder,remainder);
                             if(remainder <= 0){
                                 setState(thisNode.states,TimerData.State.finished);
+                                (new Audio('notification.mp3')).play();
                                 clearInterval(intervalId);
                             }
                         },500);
