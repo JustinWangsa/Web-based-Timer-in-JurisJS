@@ -49,7 +49,6 @@ body {
     justify-items: center;
 }
 
-
 h1, h2{
     font-size: 3rem;
     margin-bottom: 10px;
@@ -101,7 +100,6 @@ h1, h2{
     width: calc(100% - 44px);
     box-sizing: border-box;
 }
-
 
 .add button{
     padding: 10px 20px;
