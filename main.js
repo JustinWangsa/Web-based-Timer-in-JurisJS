@@ -1,37 +1,12 @@
-const savedTimers = JSON.parse(localStorage.getItem("timers")) || null;
+const savedTimers = JSON.parse(localStorage.getItem("timers")) || [];
 
 const app = new Juris({
   states: {
-    timers: savedTimers || [
-      {
-        id: 1,
-        name: "Timer 1",
-        time: 0.1 * 60,
-        running: false,
-        intervalId: null,
-      },
-      {
-        id: 2,
-        name: "Timer 2",
-        time: 0.1 * 60,
-        running: false,
-        intervalId: null,
-      },
-      {
-        id: 3,
-        name: "Timer 3",
-        time: 0.1 * 60,
-        running: false,
-        intervalId: null,
-      },
-      {
-        id: 4,
-        name: "Timer 4",
-        time: 0.1 * 60,
-        running: false,
-        intervalId: null,
-      },
-    ],
+    timers: savedTimers,
+    newTimer: {
+      name: "",
+      duration: "",
+    },
   },
 
   components: {
@@ -43,32 +18,31 @@ const app = new Juris({
         const timer = timers.find((t) => t.id === id);
         if (timer.running) return;
 
-        if (timer.intervalId) clearInterval(timer.intervalId);
-
         timer.running = true;
         timer.intervalId = setInterval(() => {
           const updatedTimers = getState("timers").map((t) => {
             if (t.id === id) {
-              if (t.time > 0) return { ...t, time: t.time - 1 };
-              else {
+              if (t.time > 0) {
+                return { ...t, time: t.time - 1 };
+              } else {
                 clearInterval(t.intervalId);
-                alert(`${t.name} finished!`);
+                alert(t.name + " Time’s up!");
                 return {
                   ...t,
-                  time: 0.1 * 60,
                   running: false,
                   intervalId: null,
+                  time: t.originalTime,
                 };
               }
             }
             return t;
           });
           setState("timers", updatedTimers);
-          localStorage.setItem("timers", JSON.stringify(getState("timers")));
+          localStorage.setItem("timers", JSON.stringify(updatedTimers));
         }, 1000);
 
         setState("timers", [...timers]);
-        localStorage.setItem("timers", JSON.stringify(getState("timers")));
+        localStorage.setItem("timers", JSON.stringify(timers));
       };
 
       const pauseTimer = () => {
@@ -79,7 +53,7 @@ const app = new Juris({
           timer.running = false;
           timer.intervalId = null;
           setState("timers", [...timers]);
-          localStorage.setItem("timers", JSON.stringify(getState("timers")));
+          localStorage.setItem("timers", JSON.stringify(timers));
         }
       };
 
@@ -87,44 +61,18 @@ const app = new Juris({
         const timers = getState("timers");
         const timer = timers.find((t) => t.id === id);
         if (timer.intervalId) clearInterval(timer.intervalId);
-        timer.time = 0.1 * 60;
+        timer.time = timer.originalTime;
         timer.running = false;
         timer.intervalId = null;
         setState("timers", [...timers]);
-        localStorage.setItem("timers", JSON.stringify(getState("timers")));
+        localStorage.setItem("timers", JSON.stringify(timers));
       };
-
-      // Restore running timers on load
-      const timers = getState("timers");
-      const timer = timers.find((t) => t.id === id);
-      if (timer.running && !timer.intervalId) {
-        timer.intervalId = setInterval(() => {
-          const updatedTimers = getState("timers").map((t) => {
-            if (t.id === id) {
-              if (t.time > 0) return { ...t, time: t.time - 1 };
-              else {
-                clearInterval(t.intervalId);
-                alert(`${t.name} finished!`);
-                return {
-                  ...t,
-                  time: 0.1 * 60,
-                  running: false,
-                  intervalId: null,
-                };
-              }
-            }
-            return t;
-          });
-          setState("timers", updatedTimers);
-          localStorage.setItem("timers", JSON.stringify(getState("timers")));
-        }, 1000);
-      }
 
       return {
         div: {
           class: "timer-card",
           children: [
-            { h1: { text: () => props.name } },
+            { h3: { text: () => props.name } },
             {
               p: {
                 text: () => {
@@ -136,10 +84,16 @@ const app = new Juris({
                 },
               },
             },
-
-            { button: { text: "Start", onclick: startTimer } },
-            { button: { text: "Pause", onclick: pauseTimer } },
-            { button: { text: "Reset", onclick: resetTimer } },
+            {
+              div: {
+                class: "button-container",
+                children: [
+                  { button: { text: "Start", onclick: startTimer } },
+                  { button: { text: "Pause", onclick: pauseTimer } },
+                  { button: { text: "Reset", onclick: resetTimer } },
+                ],
+              },
+            },
           ],
         },
       };
@@ -148,12 +102,105 @@ const app = new Juris({
 
   layout: {
     div: {
-      children: () => {
-        const timers = app.getState("timers");
-        return timers.map((timer) => ({
-          Timer: { id: timer.id, name: timer.name },
-        }));
-      },
+      class: "main-container",
+      children: [
+        {
+          div: {
+            class: "form-section",
+            children: [
+              { h2: { text: "Add New Timer" } },
+              {
+                input: {
+                  placeholder: "Name",
+                  value: () => app.getState("newTimer").name,
+                  oninput: (e) => {
+                    const nt = app.getState("newTimer");
+                    nt.name = e.target.value;
+                    app.setState("newTimer", nt);
+                  },
+                },
+              },
+              {
+                input: {
+                  placeholder: "Duration (seconds or mm:ss)",
+                  value: () => app.getState("newTimer").duration,
+                  oninput: (e) => {
+                    const nt = app.getState("newTimer");
+                    nt.duration = e.target.value;
+                    app.setState("newTimer", nt);
+                  },
+                },
+              },
+
+              {
+                button: {
+                  text: "Add Timer",
+                  class: "add-timer-button",
+                  onclick: () => {
+                    const nt = app.getState("newTimer");
+                    if (!nt.name.trim()) {
+                      alert("Name cannot be empty!");
+                      return;
+                    }
+
+                    let totalSeconds = 0;
+                    if (nt.duration.includes(":")) {
+                      const [m, s] = nt.duration.split(":").map(Number);
+                      if (isNaN(m) || isNaN(s)) {
+                        alert("Invalid mm:ss format!");
+                        return;
+                      }
+                      totalSeconds = m * 60 + s;
+                    } else {
+                      totalSeconds = Number(nt.duration);
+                      if (isNaN(totalSeconds) || totalSeconds <= 0) {
+                        alert("Duration must be a positive number!");
+                        return;
+                      }
+                    }
+
+                    const timers = app.getState("timers");
+                    const newTimer = {
+                      id: Date.now(),
+                      name: nt.name.trim(),
+                      time: totalSeconds,
+                      originalTime: totalSeconds,
+                      running: false,
+                      intervalId: null,
+                    };
+
+                    const updated = [...timers, newTimer];
+                    app.setState("timers", updated);
+                    localStorage.setItem("timers", JSON.stringify(updated));
+
+                    app.setState("newTimer", {
+                      name: "",
+                      duration: "",
+                    });
+                  },
+                },
+              },
+            ],
+          },
+        },
+
+        {
+          div: {
+            class: "timers-card-container",
+            children: () => {
+              const timers = app.getState("timers");
+              if (timers.length === 0)
+                return [{ p: { text: "No timers yet. Add one above!" } }];
+              return timers.map((timer) => ({
+                Timer: {
+                  id: timer.id,
+                  name: timer.name,
+                },
+              }));
+            },
+          },
+        },
+      ],
     },
   },
 });
