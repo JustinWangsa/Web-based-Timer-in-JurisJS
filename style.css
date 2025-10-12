@@ -1,0 +1,149 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: linear-gradient(135deg, #f8fafc, #eef2f7);
+  color: #1f2937;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+
+#app {
+  background: #ffffff;
+  width: 100%;
+  max-width: 600px;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+#app:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+}
+
+
+h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111827;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 32px;
+  margin-bottom: 12px;
+  color: #374151;
+}
+
+
+form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+input {
+  flex: 1;
+  min-width: 150px;
+  padding: 10px 14px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  outline: none;
+}
+
+
+button {
+  background-color: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background-color: #1e40af;
+  transform: translateY(-1px);
+}
+
+
+.timer {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 14px;
+  transition: all 0.3s ease;
+}
+
+.timer:hover {
+  background: #f3f4f6;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.timer h3 {
+  font-size: 1.1rem;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.timer p {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin-bottom: 8px;
+}
+
+
+.timer button {
+  background-color: #e5e7eb;
+  color: #111827;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  margin-right: 6px;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.timer button:hover {
+  background-color: #2563eb;
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  #app {
+    padding: 20px;
+  }
+
+  form {
+    flex-direction: column;
+  }
+
+  input, button {
+    width: 100%;
+  }
+}

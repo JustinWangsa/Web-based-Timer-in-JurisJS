@@ -1,17 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juris.js Web Timer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juris.js based Web Timer</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/juris@latest/juris.js"></script>
 </head>
 <body>
-    <div id="app">
-        <h1 id="timer-display">00:00:00</h1>
-        <button id="start-btn">Start</button>
-        <button id="stop-btn">Stop</button>
-    </div>
 
-    <script src="juris.js"></script>
+  <div id="app">
+
+    <h1>Multi-Timer App</h1>
+    <form id="timerForm">
+      <input type="text" id="timerName" placeholder="Timer Name" required />
+      <input type="text" id="timerDuration" placeholder="Duration (in seconds)" required />
+      <button type="submit">Add Timer</button>
+    </form>
+
+    <h2>Timers</h2>
+    <div id="timerList"></div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
