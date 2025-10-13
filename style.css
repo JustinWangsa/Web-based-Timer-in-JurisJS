@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
   background: linear-gradient(135deg, #f8fafc, #eef2f7);
   color: #1f2937;
   display: flex;
@@ -14,7 +14,6 @@ body {
   min-height: 100vh;
   padding: 40px 20px;
 }
-
 
 #app {
   background: #ffffff;
@@ -29,7 +28,6 @@ body {
 #app:hover {
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
 }
-
 
 h1 {
   font-size: 1.8rem;
@@ -47,7 +45,6 @@ h2 {
   color: #374151;
 }
 
-
 form {
   display: flex;
   gap: 10px;
@@ -56,14 +53,23 @@ form {
   margin-bottom: 24px;
 }
 
-input {
-  flex: 1;
-  min-width: 150px;
-  padding: 10px 14px;
+.form-input {
+  padding: 0.75rem 1rem;
   border: 1.5px solid #d1d5db;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-size: 0.95rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-label {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+}
+
+.warning-text {
+  font-size: 1rem;
+  color: #dc2626;
+  margin-top: 0.5rem;
 }
 
 input:focus {
@@ -71,7 +77,6 @@ input:focus {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
   outline: none;
 }
-
 
 button {
   background-color: #2563eb;
@@ -82,6 +87,7 @@ button {
   cursor: pointer;
   font-size: 0.95rem;
   transition: all 0.2s ease;
+  margin-top: 1rem;
 }
 
 button:hover {
@@ -89,13 +95,15 @@ button:hover {
   transform: translateY(-1px);
 }
 
-
 .timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background: #f9fafb;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 16px 20px;
-  margin-bottom: 14px;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
   transition: all 0.3s ease;
 }
 
@@ -105,18 +113,22 @@ button:hover {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-.timer h3 {
+.timer-name {
   font-size: 1.1rem;
   color: #111827;
   margin-bottom: 8px;
 }
 
-.timer p {
+.timer-remainder {
   font-size: 0.95rem;
   color: #4b5563;
   margin-bottom: 8px;
 }
 
+.button-container {
+  display: flex;
+  gap: 8px;
+}
 
 .timer button {
   background-color: #e5e7eb;
@@ -143,7 +155,8 @@ button:hover {
     flex-direction: column;
   }
 
-  input, button {
+  input,
+  button {
     width: 100%;
   }
 }
