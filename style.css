@@ -160,3 +160,9 @@ button:hover {
     width: 100%;
   }
 }
+
+/* quick fix, need to be officialize */
+.form-input:empty::before{
+  content: attr(data-placeholder);
+  color:#bbb8c9;
+}
